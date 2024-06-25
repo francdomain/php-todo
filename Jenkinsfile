@@ -16,7 +16,7 @@ pipeline {
 
         stage('Prepare Dependencies') {
             steps {
-                sh 'mv .env.sample .env'
+                // sh 'mv .env.sample .env'
                 sh 'mkdir -p bootstrap/cache'
                 sh 'composer install'
                 sh 'php artisan migrate'
@@ -73,7 +73,7 @@ pipeline {
                             }
                         ]
                     }"""
-                    println "Upload Spec: ${uploadSpec}"
+                    println "xUpload Spec: ${uploadSpec}"
                     try {
                         server.upload spec: uploadSpec
                         println "Upload successful"

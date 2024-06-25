@@ -86,7 +86,7 @@ pipeline {
 
         stage('Deploy to Dev Environment') {
             steps {
-                build job: 'ansibllle-config-mgt/main',
+                build job: 'ansible-config-mgt/main',
                 parameters: [
                     [$class: 'StringParameterValue', name: 'inventory', value: 'dev.yml'],
                     [$class: 'StringParameterValue', name: 'ansible_tags', value: 'deployment']

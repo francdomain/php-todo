@@ -68,7 +68,7 @@ pipeline {
                         "files": [
                             {
                                 "pattern": "php-todo.zip",
-                                "target": "Todo-dev-local/php-todo",
+                                "target": "Todo-artifact-local/php-todo",
                                 "props": "type=zip;status=ready"
                             }
                         ]
@@ -88,7 +88,7 @@ pipeline {
             steps {
                 build job: 'ansibllle-config-mgt/main',
                 parameters: [
-                    [$class: 'StringParameterValue', name: 'inventory', value: 'dev'],
+                    [$class: 'StringParameterValue', name: 'inventory', value: 'dev.yml'],
                     [$class: 'StringParameterValue', name: 'ansible_tags', value: 'deployment']
                 ],
                 propagate: false,

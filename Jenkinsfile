@@ -75,6 +75,8 @@ pipeline {
                         def qg = waitForQualityGate()
                         echo "Quality Gate status: ${qg.status}"
                         echo "Quality Gate details: ${qg}"
+                        // Add detailed logging of qg object
+                        echo "Quality Gate details (full): ${qg.inspect()}"
                         if (qg.status != 'OK') {
                             echo "Quality Gate failed: ${qg.status}"
                             error "Pipeline aborted due to quality gate failure: ${qg.status}"

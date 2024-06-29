@@ -53,46 +53,31 @@ pipeline {
             }
         }
 
-        // stage('SonarQube Quality Gate') {
-        //     when {
-        //         expression {
-        //             def branchName = env.BRANCH_NAME ?: sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
-        //             echo "Current branch: ${branchName}"
-        //             return branchName ==~ /^(develop|hotfix|release|main|master)$/
-        //         }
-        //     }
-        //     environment {
-        //         scannerHome = tool 'SonarQubeScanner'
-        //     }
-        //     steps {
-        //         withSonarQubeEnv('sonarqube') {
-        //             sh "${scannerHome}/bin/sonar-scanner"
-        //         }
-        //         timeout(time: 5, unit: 'MINUTES') {
-        //             script {
-        //                 def qg = waitForQualityGate()
-        //                 if (qg.status != 'OK') {
-        //                     echo "Quality Gate failed: ${qg.status}"
-        //                     error "Pipeline aborted due to quality gate failure: ${qg.status}"
-        //                 } else {
-        //                     echo "Quality Gate passed: ${qg.status}"
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-
         stage('SonarQube Quality Gate') {
-          when { branch pattern: "^develop*|^hotfix*|^release*|^main*", comparator: "REGEXP"}
+            when {
+                expression {
+                    def branchName = env.BRANCH_NAME ?: sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+                    echo "Current branch: ${branchName}"
+                    return branchName ==~ /^(develop|hotfix|release|main|master)$/
+                }
+            }
             environment {
                 scannerHome = tool 'SonarQubeScanner'
             }
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh "${scannerHome}/bin/sonar-scanner -Dproject.settings=sonar-project.properties"
+                    sh "${scannerHome}/bin/sonar-scanner"
                 }
-                timeout(time: 1, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
+                timeout(time: 5, unit: 'MINUTES') {
+                    script {
+                        def qg = waitForQualityGate()
+                        if (qg.status != 'OK') {
+                            echo "Quality Gate failed: ${qg.status}"
+                            error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                        } else {
+                            echo "Quality Gate passed: ${qg.status}"
+                        }
+                    }
                 }
             }
         }

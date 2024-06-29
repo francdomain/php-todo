@@ -58,7 +58,9 @@ pipeline {
                 expression {
                     def branchName = env.BRANCH_NAME ?: sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
                     echo "Current branch: ${branchName}"
-                    return branchName ==~ /^(develop|hotfix|release|main|master)$/
+                    def match = branchName ==~ /^(develop|hotfix|release|main|master)$/
+                    echo "Branch matches condition: ${match}"
+                    return match
                 }
             }
             environment {
